@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+{% if loginType %}
+Login
+{% else %}
+Register
+{% endif %}
+
+{% endblock %}
+
+
+
+{% block body %}
+<div style="background: #435d7d; color: #fff; padding: 16px 30px;">
+    <div class="row">
+        <div class="col-md-8 col-6">
+            <h2><b>YourBooks</b></h2>
+        </div>
+        <div class="col-md-4 col-6">
+            <div class="d-flex justify-content-around">
+                {% if loginType %}
+                <form action="/register">
+                    <button style="
+                    border: none;
+                    padding: 10px 15px;
+                    background: indianred;
+                    border-radius: 10px;
+                    color: white;
+                    font-weight: bold;
+                    font-size: 15px;
+                    " class="register-btn" type="submit">Register</button>
+                </form>
+                {% else %}
+                <form action="/sign-in" method="GET">
+                    <button style="
+                    border: none;
+                    padding: 10px 15px;
+                    background: cadetblue;
+                    border-radius: 10px;
+                    color: white;
+                    font-weight: bold;
+                    font-size: 15px;
+                    " class="register-btn" type="submit">Login</button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if loginType %}
+
+<div class="handle_login_wrapper">
+    <section class="first-heading-handle-login">
+        <h2><strong>Hi! Welcome to YourBlog.</strong></h2>
+    </section>
+    <section class="second-heading-handle-login" style="text-align: center;">
+        <h2><strong>Hi! Welcome to YourBlog.</strong></h2>
+    </section>
+    <div class="row" style="margin-right: 0px; margin-top: 30px;">
+        <div class="col-md-6 col-12">
+            <div style="font-size: 20px;">
+                <ul>
+                    <li>
+                        Enter your unique ID
+                    </li>
+                    <li>
+                        Enter your password
+                    </li>
+                    <li>Enjoy YourBlog!</li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-6 col-12">
+            <div style="text-align: center;">
+                <form method="POST" action="/sign-in" class="login-form">
+                    <input type="number" minlength="2" placeholder="Enter ID(numerical)" name="id" class="my_input">
+                    <br>
+                    <input type="password" minlength="3" placeholder="Enter Password" name="password" class="my_input">
+                    <br>
+                    <button type="submit" class="btn btn-success" style="margin-top: 20px;font-weight: bold;font-size: 18px;border-radius: 8px;padding: 5px 20px;
+                    ">Login</button>
+                </form>
+            </div>
+        </div>
+        
+    </div>
+    {% if errMsg %}
+    <p style="color: red; font-size: 20px; margin-top: 20px; text-align: center;">{{errMsg}}</p>
+    {% endif %}
+</div>
+{% else %}
+
+<div class="handle_login_wrapper">
+    <section class="first-heading-handle-login">
+        <h2><strong>Hi! Welcome to YourBooks.</strong></h2>
+    </section>
+    <section class="second-heading-handle-login" style="text-align: center;">
+        <h2><strong>Hi! Welcome to YourBooks.</strong></h2>
+    </section>
+    <div class="row" style="margin-right: 0px; margin-top: 30px;">
+        <div class="col-md-6 col-12">
+            <div style="font-size: 20px;">
+                <ul>
+                    <li>
+                        Enter your unique ID
+                    </li>
+                    <li>
+                        Enter your password
+                    </li>
+                    <li>Enjoy YourBooks!</li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-6 col-12">
+            <div style="text-align: center;">
+                <form method="POST" action="/register" class="login-form">
+                    <input type="number" minlength="2" class="my_input" placeholder="Enter ID(numerical)" name="id" class="
+                    my_input
+                    ">
+                    <br>
+                    <input type="text" minlength="3" placeholder="Enter Unique Username" name="uname" class="
+                    my_input
+                    ">
+                    <br>
+                    <input type="password" minlength="3" placeholder="Enter Password" name="pwd" class="
+                    my_input
+                    ">
+                    <br>
+                    <button type="submit" class="btn btn-success" style="margin-top: 20px;font-weight: bold;font-size: 18px;border-radius: 8px;padding: 5px 20px;
+                    ">Register</button>
+                </form>
+            </div>
+        </div>
+        {% if errMsg %}
+        <p style="color: red; font-size: 20px; margin-top: 20px; text-align: center;">{{errMsg}}</p>
+        {% endif %}
+</div>
+{% endif %}
+
+{% endblock %}

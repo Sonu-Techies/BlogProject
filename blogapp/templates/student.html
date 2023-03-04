@@ -1,0 +1,222 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+{{user.sName}}'s Dashboard
+{% endblock %}
+
+{% block body %}
+<div style="background: #435d7d; color: #fff; padding: 16px 30px;">
+    <div class="row">
+        <div class="col-md-8 col-12">
+            <h2><b>YourBooks</b></h2>
+        </div>
+        <div class="col-md-4 col-12">
+
+            <div class="d-none d-sm-block">
+                <div class="d-flex justify-content-end">
+                    <form action="/student/{{user.sId}}/books" style="margin-right: 25px;">
+                        <button style="padding: 10px 15px;color: white;font-weight: bold;font-size: 18px;" type="submit"
+                            class="btn btn-dark">View Borrowed Books</button>
+                    </form>
+                    <form action="/logout">
+                        <button style="padding: 10px 15px;color: white;font-weight: bold;font-size: 18px;" type="submit"
+                            class="btn btn-danger">Logout</button>
+                    </form>
+                </div>
+            </div>
+            <div class="d-block d-sm-none">
+                <div class="d-flex justify-content-end">
+                    <form action="/student/{{user.sId}}/books" style="margin-right: 15px;">
+                        <button style="padding: 8px 12px;color: white;font-weight: bold;font-size: 15px;" type="submit"
+                            class="btn btn-dark">View Borrowed Books</button>
+                    </form>
+                    <form action="/logout">
+                        <button style="padding: 8px 12px;color: white;font-weight: bold;font-size: 15px;" type="submit"
+                            class="btn btn-danger">Logout</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="table-responsive" style="overflow-x: hidden;">
+        <div class="table-wrapper">
+            <div class="table-title">
+                <div class="row">
+                    <div class="col-sm-6 my-3">
+                        <h2><b>Hi {{user.sName}}</b></h2>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="my-3">
+                            <form action="/student/{{user.sId}}" class="d-flex" method="POST">
+                                <input class="form-control me-2 mx-4" type="search" placeholder=" Search Book by Title"
+                                    name="KeyWord" aria-label="Search">
+                                <button class="btn btn-success" type="submit">Search</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                {% if booksName|length < 1 and books|length < 1 %} <h4 style="text-align: center">There are no books present.</h4>
+                {% else %}    
+                <h4>Here's a list of all available books. You can explore and borrow any of them!</h4>
+                {% endif %}
+            </div>
+            {% if booksName|length > 1 or books|length > 1 %}
+            <table class="student-table table table-striped table-hover mt-4">
+                
+                <!-- Search -->
+
+
+                {% if search != 1 %}
+
+                <thead>
+                    <tr style="background-color: black; color:ivory">
+                        <th>Book Title </th>
+                        <th>Author Name</th>
+                        <th>Description</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+
+                <tbody>
+
+                    {% for book in books %}
+
+                    <tr>
+                        <td width="20%">
+                            <p>{{book.bTitle}}</p>
+                        </td>
+                        <td width="20%">
+                            <p>{{book.aName}}</p>
+                        </td>
+                        <td width="30%">
+                            <p>{{book.bDesc}}</p>
+                        </td>
+                        <td width="30%" style="text-align: end;">
+                            {% if book.count == 0 %}
+                            <button disabled class="btn btn-primary">
+                                Borrow
+                            </button>
+                            {% else %}
+                            <button type="button" class="btn btn-primary" data-toggle="modal"
+                                data-target="#exampleModal{{book.bId}}">
+                                Borrow</button>
+                            {% endif %}
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+                </tbody>
+
+                {% else %}
+
+                    <thead>
+                        <tr style="background-color: black; color:ivory">
+                            <th>Book Name</th>
+                            <th>Author Name</th>
+                            <th>Description</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    {% for book in booksName %}
+                    <tr>
+                        <td width="20%">
+                            <p>{{book.bTitle}}</p>
+                        </td>
+                        <td width="20%">
+                            <p>{{book.aName}}</p>
+                        </td>
+                        <td width="30%">
+                            <p>{{book.bDesc}}</p>
+                        </td>
+                        <td width="30%" style="text-align: end;">
+
+                            {% if book.count == 0 %}
+                            <button disabled class="btn btn-primary">
+                                Borrow
+                            </button>
+                            {% else %}
+                            <button type="button" class="btn btn-primary" data-toggle="modal"
+                                data-target="#exampleModal2a{{book.bId}}">
+                                Borrow
+                            </button>
+                            {% endif %}
+
+                            
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+
+                {% endif %}
+
+            </table>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block modal %}
+
+{% for book in books %}
+
+<div class="modal fade" id="exampleModal{{book.bId}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Borrow Status</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p> Do you want to borrow {{book.bTitle}}?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <form action="/borrow/{{user.sId}}/{{book.bId}}" method="POST">
+                    <input type="submit" class="btn btn-primary" value="Confirm">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+{% for book in booksName %}
+
+<div class="modal fade" id="exampleModal2a{{book.bId}}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel2">Borrow Status</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p> Do you want to borrow {{book.bTitle}}?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <form action="/borrow/{{user.sId}}/{{book.bId}}" method="POST">
+                    <input type="submit" class="btn btn-primary" value="Confirm">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+{% endblock %}

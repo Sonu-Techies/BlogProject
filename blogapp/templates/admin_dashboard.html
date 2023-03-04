@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Admin Dashboard
+{% endblock %}
+
+{% block body %}
+
+<div>
+    <div style="background: #435d7d; color: #fff; padding: 16px 30px;">
+        <div class="row">
+            <div class="col-md-8 col-12">
+                <h2><b>YourBlogs</b></h2>
+            </div>
+            <div class="col-md-4 col-12">
+                <div class="d-none d-sm-block">
+                    <div class="d-flex justify-content-end">
+                        <div style="margin-right: 15px;">
+                            <button type="button" style="color: #fff;
+                            float: right;
+                            font-size: 18px;
+                            border-radius: 2px;
+                            border: none;
+                            padding: 9px 15px;
+                            " class="btn btn-success btn-sm" data-toggle="modal" data-target="#addEmployeeModal">
+                                <i class="material-icons" style="	float: left;
+                                font-size: 21px;
+                                margin-right: 5px;margin-top: 4px;">&#xE147;</i>
+                                <span style="float: left;
+                                margin-top: 2px;"><strong>Add Blog</strong></span>
+                            </button>
+                        </div>
+                        <form action="/logout">
+                            <button style="padding: 10px 15px;color: white;font-weight: bold;font-size: 18px;"
+                                type="submit" class="btn btn-danger">Logout</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="d-block d-sm-none">
+                    <div class="d-flex justify-content-end">
+                        <form action="/logout">
+                            <button style="padding: 8px 12px;color: white;font-weight: bold;font-size: 15px;"
+                                type="submit" class="btn btn-danger">Logout</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if books|length < 1 %} <h4 style="text-align: center;">There are no blogs present.</h4>
+        {% else %}
+        <div class="container-fluid">
+            <div class="table-responsive" style="overflow-x: hidden;">
+                <div class="table-wrapper">
+                    <div class="table-title">
+                        <h2>Edit the details of existing Blogs or add Blogs.</h2>
+                    </div>
+
+                    <table class="student-table table table-striped table-hover mt-4">
+                        <thead>
+                            <tr style="background-color: black; color:ivory">
+                                <th>Blog Title </th>
+                                <th>Author Name</th>
+                                <th>Content</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        {% for blog in books %}
+                        <tr>
+                            <td width="20%">
+                                <p>{{blog.title}}</p>
+                            </td >
+                            <td width="20%">
+                                <p>{{blog.author}}</p>
+                            </td>
+                            <td width="30%">
+                                <p>{{blog.content}}</p>
+                            </td>
+                            <td width="30%" style="text-align: end;">
+                                <button type="button" style="padding: 10px 15px; font-weight: bold; font-size: 15px;" class="btn btn-primary btn-sm" data-toggle="modal"
+                                    data-target="#editEmployeeModal{{ blog.bId }}"><strong>Edit</strong></button>
+                                <button style="margin-left: 15px; padding: 10px 15px; font-weight: bold; font-size: 15px;" type="button" class="btn btn-danger btn-sm"
+                                    data-toggle="modal"
+                                    data-target="#deleteEmployeeModal{{ blog.bId }}"><strong>Delete</strong></button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+</div>
+
+<div id="addEmployeeModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" action="/add-book">
+                <div class="modal-header">
+                    <h4 class="modal-title">Add Blog</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Blog Name</label>
+                        <input type="text" class="form-control" required name="blogName" placeholder="Blog Name"
+                            minlength="3">
+                    </div>
+                    <div class="form-group">
+                        <label>Author Name</label>
+                        <input type="text" class="form-control" required name="authorName" placeholder="Blog Author">
+                    </div>
+                    <div class="form-group">
+                        <label>Content</label>
+                        <textarea class="form-control" required name="content" placeholder="Blog Synopsis"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+                    <input type="submit" class="btn btn-success" value="Add blog">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% for blog in books %}
+<div id="deleteEmployeeModal{{blog.bId}}" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="/delete-blog/{{blog.bId}}" method="POST">
+                <div class="modal-header">
+                    <h4 class="modal-title">Delete Blog</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p>Do you want to delete the blog {{blog.title}}</p>
+                    <p class="text-warning">This action cannot be undone.</p>
+                </div>
+                <div class="modal-footer">
+                    <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+                    <input type="submit" style="font-weight: 800;" class="btn btn-danger" value="Delete">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="editEmployeeModal{{blog.bId}}" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="/update-blog/{{blog.bId}}" method="POST">
+                <div class="modal-header">
+                    <h4 class="modal-title">Edit blog</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Blog Name</label>
+                        <input type="text" class="form-control" required value="{{blog.title}}" name="title">
+                    </div>
+                    <div class="form-group">
+                        <label>Author Name</label>
+                        <input type="text" class="form-control" required value="{{blog.author}}" name="author">
+                    </div>
+                    <div class="form-group">
+                        <label>Content</label>
+                        <textarea class="form-control" required name="content">{{blog.content}}</textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+                    <input type="submit" class="btn btn-info" value="Update Details">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endfor %}
+
+
+{% endblock %}

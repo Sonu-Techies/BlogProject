@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+
+{% block body %}
+
+<form action="/update-blog/{{blog.id}}" method="POST">
+
+<div>
+    <input type="text" value="{{book.title}}" name="title">
+</div>
+<div>
+    <input type="text" value="{{book.author}}" name="author">
+</div>
+<div>
+    <input type="text" value="{{book.content}}" name="description">
+</div>
+<div>
+    <input type="submit" value="Update book details!">
+</div>
+</form>
+
+{% endblock %}
+
+<!-- book.bTitle = request.form.get('title')
+book.aName = request.form.get('author')
+book.bDesc = request.form.get('description')
+book.count = int(request.form.get('count')) -->
